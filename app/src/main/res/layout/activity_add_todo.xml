@@ -42,13 +42,24 @@
               android:layout_height="wrap_content"
               android:layout_weight="1"
               android:text="set tanggal"
+              android:id="@+id/btnSetDate"
       />
       <Button android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_weight="1"
               android:text="set waktu"
+              android:id="@+id/btnSetTime"
       />
    </LinearLayout>
+
+   <TextView android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:textAlignment="center"
+             android:layout_marginTop="24dp"
+             android:text="Belum memilih tanggal"
+             android:id="@+id/txtSelectedDatetime"
+             android:textSize="18sp"
+   />
 
    <Button android:layout_width="match_parent"
            android:layout_height="wrap_content"
