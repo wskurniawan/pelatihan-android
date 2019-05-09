@@ -27,6 +27,7 @@
              android:layout_height="wrap_content"
              android:lines="3"
              android:hint="nama kegiatan"
+             android:id="@+id/editNamaKegiatan"
    />
 
    <TextView android:layout_width="match_parent"
@@ -65,5 +66,6 @@
            android:layout_height="wrap_content"
            android:text="simpan"
            android:layout_marginTop="24dp"
+           android:id="@+id/btnSaveTodo"
    />
 </LinearLayout>
