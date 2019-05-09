@@ -2,10 +2,15 @@ package com.example.myapplication
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.DatePicker
 import android.widget.TimePicker
+import android.widget.Toast
+import com.example.myapplication.model.database.TodoItemModel
+import com.example.myapplication.repository.TodoItemRepository
 import kotlinx.android.synthetic.main.activity_add_todo.*
 import java.util.*
 
@@ -24,6 +29,10 @@ class AddTodo : AppCompatActivity() {
 
         btnSetTime.setOnClickListener {
             setTime()
+        }
+
+        btnSaveTodo.setOnClickListener {
+            saveTodoItem()
         }
     }
 
@@ -58,5 +67,28 @@ class AddTodo : AppCompatActivity() {
         val text = "${selectedDate.get(Calendar.DAY_OF_MONTH)} - ${selectedDate.get(Calendar.MONTH) + 1} - ${selectedDate.get(Calendar.YEAR)}, ${selectedDate.get(Calendar.HOUR_OF_DAY)}:${selectedDate.get(Calendar.MINUTE)}"
 
         txtSelectedDatetime.text = text
+    }
+
+    private fun saveTodoItem(){
+        val todoItemRepository = TodoItemRepository(this)
+        val todoItem = TodoItemModel()
+
+        todoItem.namaKegiatan = editNamaKegiatan.text.toString()
+        todoItem.timestamp = selectedDate.timeInMillis
+        todoItem.username = getUsername()
+
+        todoItemRepository.insertTodoItem(todoItem)
+
+        //munculkan pesan dan buka halaman home
+        Toast.makeText(this, "Berhasil menambahkan todo", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, Home::class.java))
+        finish()
+    }
+
+    //get username dari sharedPreference
+    private fun getUsername(): String?{
+        val sharedPreferences = this.getSharedPreferences("pelatihan_android", Context.MODE_PRIVATE)
+
+        return sharedPreferences.getString("username", "")
     }
 }
