@@ -1,6 +1,7 @@
 package com.example.myapplication.repository
 
 import android.content.Context
+import android.util.Log
 import com.example.myapplication.dao.AppDatabase
 import com.example.myapplication.model.database.TodoItemModel
 import org.jetbrains.anko.doAsync
@@ -19,7 +20,8 @@ class TodoItemRepository(context: Context){
         }
     }
 
-    fun getTodoList(username: String, resultListener: ResultListener<List<TodoItemModel>>){
+    fun getTodoList(username: String?, resultListener: ResultListener<List<TodoItemModel>>){
+        Log.i("APP", username)
         doAsync {
             val listTodoItem = appDatabase.todoItemDao().getTodoItem(username)
 

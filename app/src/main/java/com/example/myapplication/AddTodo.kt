@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
+import com.example.myapplication.helper.UserData
 import com.example.myapplication.model.database.TodoItemModel
 import com.example.myapplication.repository.TodoItemRepository
 import kotlinx.android.synthetic.main.activity_add_todo.*
@@ -87,8 +88,6 @@ class AddTodo : AppCompatActivity() {
 
     //get username dari sharedPreference
     private fun getUsername(): String?{
-        val sharedPreferences = this.getSharedPreferences("pelatihan_android", Context.MODE_PRIVATE)
-
-        return sharedPreferences.getString("username", "")
+        return UserData.username
     }
 }

@@ -3,7 +3,9 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="12dp"
+>
 
     <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -21,6 +23,7 @@
                     android:layout_height="wrap_content"
                     android:text="Contoh Kegiatan"
                     android:textSize="24dp"
+                    android:id="@+id/txtNamaKegiatan"
             />
 
             <TextView
@@ -28,6 +31,7 @@
                     android:layout_height="wrap_content"
                     android:text="24 Maret 2018"
                     android:textSize="16dp"
+                    android:id="@+id/txtTanggalKegiatan"
             />
 
         </LinearLayout>

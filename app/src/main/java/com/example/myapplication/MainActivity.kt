@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.myapplication.helper.UserData
 import com.example.myapplication.model.database.AccountModel
 import com.example.myapplication.repository.AccountRepository
 import kotlinx.android.synthetic.main.activity_main.*
@@ -49,6 +50,9 @@ class MainActivity : AppCompatActivity() {
 
                     //jika password benar, simpan username kedalam shared preference
                     saveUsername(username)
+
+                    //menyimpan username pada static variable
+                    UserData.username = username
 
                     //buka halaman home
                     startActivity(Intent(applicationContext, Home::class.java))
