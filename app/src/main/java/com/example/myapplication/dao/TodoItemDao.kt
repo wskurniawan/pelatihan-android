@@ -11,7 +11,7 @@ interface TodoItemDao {
     fun inserTodoItem(todoItem: TodoItemModel)
 
     @Query("SELECT * FROM TodoItemModel WHERE username = :username")
-    fun getTodoItem(username: String): List<TodoItemModel>
+    fun getTodoItem(username: String?): List<TodoItemModel>
 
     @Query("DELETE FROM TodoItemModel WHERE id = :id")
     fun deleteTodoItem(id: Int)
