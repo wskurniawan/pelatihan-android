@@ -10,9 +10,15 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
 import com.example.myapplication.helper.UserData
+import com.example.myapplication.model.api.add_todo.AddTodoRequest
+import com.example.myapplication.model.api.add_todo.AddTodoResponse
 import com.example.myapplication.model.database.TodoItemModel
+import com.example.myapplication.net.RetrofitClient
 import com.example.myapplication.repository.TodoItemRepository
 import kotlinx.android.synthetic.main.activity_add_todo.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 class AddTodo : AppCompatActivity() {
@@ -71,23 +77,23 @@ class AddTodo : AppCompatActivity() {
     }
 
     private fun saveTodoItem(){
-        val todoItemRepository = TodoItemRepository(this)
-        val todoItem = TodoItemModel()
+        val requestBody = AddTodoRequest(namaKegiatan = editNamaKegiatan.text.toString(), timestamp = selectedDate.timeInMillis)
+        val apiClient = RetrofitClient().getClient()
 
-        todoItem.namaKegiatan = editNamaKegiatan.text.toString()
-        todoItem.timestamp = selectedDate.timeInMillis
-        todoItem.username = getUsername()
+        apiClient.addTodo(requestBody, UserData.token).enqueue(object: Callback<AddTodoResponse>{
+            override fun onResponse(call: Call<AddTodoResponse>, response: Response<AddTodoResponse>) {
+                if(response.body() != null){
+                    Toast.makeText(applicationContext, "Todo item ditambahkan", Toast.LENGTH_SHORT).show()
+                    finish()
+                }else{
+                    Toast.makeText(applicationContext, "Tidak dapat menambahkan todo list", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-        todoItemRepository.insertTodoItem(todoItem)
+            override fun onFailure(call: Call<AddTodoResponse>, t: Throwable) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
 
-        //munculkan pesan dan buka halaman home
-        Toast.makeText(this, "Berhasil menambahkan todo", Toast.LENGTH_SHORT).show()
-        startActivity(Intent(this, Home::class.java))
-        finish()
-    }
-
-    //get username dari sharedPreference
-    private fun getUsername(): String?{
-        return UserData.username
     }
 }

@@ -8,9 +8,15 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.myapplication.helper.UserData
+import com.example.myapplication.model.api.signin.SigninRequest
+import com.example.myapplication.model.api.signin.SigninResponse
 import com.example.myapplication.model.database.AccountModel
+import com.example.myapplication.net.RetrofitClient
 import com.example.myapplication.repository.AccountRepository
 import kotlinx.android.synthetic.main.activity_main.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,41 +33,13 @@ class MainActivity : AppCompatActivity() {
 
         //menambahkan click listener
         btnLogin.setOnClickListener{
-            getData()
+            doLogin()
         }
 
         //menambahkan click listener
         txtRegister.setOnClickListener{
             goToRegister()
         }
-    }
-
-    private fun getData(){
-        val username = editUsername.text.toString()
-        val password = editPassword.text.toString()
-
-        val accountRepository = AccountRepository(this)
-
-        accountRepository.getAccount(username, object: AccountRepository.ResultListener<AccountModel>{
-            override fun onResult(data: AccountModel) {
-                Log.i("APP", "passworrd: ${data.password} password input: $password" )
-                if(data.password.equals(password)){
-                    Toast.makeText(applicationContext, "Login berhasil", Toast.LENGTH_SHORT).show()
-
-                    //jika password benar, simpan username kedalam shared preference
-                    saveUsername(username)
-
-                    //menyimpan username pada static variable
-                    UserData.username = username
-
-                    //buka halaman home
-                    startActivity(Intent(applicationContext, Home::class.java))
-                    finish()
-                }else{
-                    Toast.makeText(applicationContext, "password salah", Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
     }
 
     //membuka halaman registerasi
@@ -90,5 +68,41 @@ class MainActivity : AppCompatActivity() {
         val username = sharedPreferences.getString("username", "")
 
         return username
+    }
+
+    private fun doLogin(){
+        val username = editUsername.text.toString()
+        val password = editPassword.text.toString()
+
+        val apiService = RetrofitClient().getClient()
+        val requestBody = SigninRequest(password, username)
+
+        //simpan username kedalam shared preference
+        saveUsername(username)
+        UserData.username = username
+
+        apiService.signin(requestBody).enqueue(object: Callback<SigninResponse>{
+            override fun onResponse(call: Call<SigninResponse>, response: Response<SigninResponse>) {
+                if(response.body() != null){
+                    handleSigninResponse(response.body()!!)
+                }else{
+                    Toast.makeText(applicationContext, "Tidak dapat login", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<SigninResponse>, t: Throwable) {
+                Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun handleSigninResponse(response: SigninResponse){
+        if(response.success!!){
+            UserData.token = response.data!!.token!!
+
+            startActivity(Intent(applicationContext, Home::class.java))
+        }else{
+            Toast.makeText(applicationContext, response.error!!.message!!, Toast.LENGTH_SHORT).show()
+        }
     }
 }
